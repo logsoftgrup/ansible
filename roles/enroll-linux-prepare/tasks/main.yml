@@ -1,0 +1,8 @@
+---
+
+- add_host:
+    name: "{{ srv_host }}"
+    ansible_host: "{{ srv_ip }}"
+    ansible_user: "{{ srv_user }}"
+    ansible_password: "{{ srv_pass }}"
+

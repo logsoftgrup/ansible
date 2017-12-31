@@ -1,0 +1,37 @@
+---
+
+### Start deploying Docker
+
+  - name: Install Docker components
+    yum:
+      name: docker,python-docker-py
+      state: latest
+
+  - name: Install and Enable Docker service
+    service: 
+      name: docker
+      state: started
+      enabled: yes
+
+  - name: Pull CentOS base image
+    docker_image:
+      name: centos
+
+  - name: Create debug volume ||| Workaround for bug in Ansible docker_volume module when creating a new volume when no other volumes are present
+    shell: /usr/bin/docker volume create --name bug
+
+### Start deploying main container
+
+  - name: Copy Base Image files
+    copy:
+      src: base.image
+      dest: /root/
+
+  - name: Create Base Image
+    docker_image:
+      name: base.image
+      path: /root/base.image
+      pull: no
+      rm: yes
+      dockerfile: /root/base.image/Dockerfile
+

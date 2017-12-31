@@ -1,0 +1,17 @@
+---
+
+- name: Reboot the server with the new kernel
+  shell: sleep 2 && /sbin/shutdown -r now "System upgrade via Ansible"
+  async: 1
+  poll: 0
+  ignore_errors: true
+  delegate_to: "{{ srv_host }}"
+
+- name: Wait for the host to be reachable again
+  wait_for_connection:
+    delay: 5
+    timeout: 300
+  delegate_to: "{{ srv_host }}"
+
+- debug:
+    msg: "Host came back!"

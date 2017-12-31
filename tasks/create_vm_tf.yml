@@ -1,0 +1,15 @@
+---
+
+  - name: Create Virtual Machine
+    vmware_guest:
+      cluster: "Compute"
+      datacenter: "TF HQ"
+      folder: "{{ vmfolder }}"
+      hostname: vcsa.temperfield.lan
+      name: "{{ vmname }}"
+      username: "administrator@vsphere.local"
+      password: "P@ssw0rd1!"
+      template: "Win2k8r2"
+      validate_certs: False
+      wait_for_ip_address: True
+    delegate_to: localhost

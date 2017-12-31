@@ -1,0 +1,12 @@
+---
+
+- name: Test
+  hosts: localhost
+
+  tasks:
+
+  - name: "Replace occurences of {{ srv_host }} in inventory if any"
+    replace:
+      path: "test-hosts"
+      regexp: '(ansible-tower.lsg.local).*'
+      replace: '\1 ansible_host=srv_ip ansible_port=6789 ansible_user=srv_user ansible_password=srv_pass'

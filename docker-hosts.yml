@@ -1,0 +1,7 @@
+---
+
+- name: Configuration pertaining to Docker hosts
+  hosts: docker
+
+  roles:
+    - docker

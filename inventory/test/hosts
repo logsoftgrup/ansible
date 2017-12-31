@@ -1,0 +1,17 @@
+
+[static-web-servers]
+
+[static-web-servers:children]
+dynamic-web-servers
+
+[dynamic-web-servers]
+ansible-tower.lsg.local ansible_host=10.0.10.22 ansible_port=6789 ansible_user=root ansible_password=P@ssw0rd
+
+[mysql-servers]
+ansible-tower.lsg.local ansible_host=10.0.10.22 ansible_port=6789 ansible_user=root ansible_password=P@ssw0rd
+
+[docker:children]
+static-web-servers
+dynamic-web-servers
+mysql-servers
+

@@ -1,0 +1,7 @@
+---
+
+- name: Configuration pertaining to Dynaamic Web servers
+  hosts: dynamic-web-servers
+
+  roles:
+    - web-dynamic

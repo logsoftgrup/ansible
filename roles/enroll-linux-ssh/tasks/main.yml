@@ -1,0 +1,30 @@
+---
+
+- name: Setup SElinux for alternate SSH port
+  seport:
+    ports: "6789"
+    proto: "tcp"
+    setype: "ssh_port_t"
+    state: "present"
+  delegate_to: "{{ srv_host }}"
+
+- name: Setup authorized key
+  authorized_key:
+    user: "{{ srv_user }}"
+    key: "{{ lookup('file', 'id_rsa.pub') }}"
+    state: present
+    manage_dir: no
+  delegate_to: "{{ srv_host }}"
+
+- name: Setup alternate SSH port
+  lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: "^Port"
+    line: "Port 6789"
+  delegate_to: "{{ srv_host }}"
+
+- name: Restart sshd
+  service:
+    name: sshd
+    state: restarted
+  delegate_to: "{{ srv_host }}"

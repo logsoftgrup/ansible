@@ -1,0 +1,33 @@
+---
+- name: New Linux host
+  hosts: "localhost"
+  user: root
+
+  vars_prompt:
+    - name: srv_type
+      prompt: "New server type (vmware/hv)"
+      private: no
+    - name: srv_ip
+      prompt: "New server IP"
+      private: no
+    - name: srv_host
+      prompt: "New server hostname"
+      private: no
+    - name: srv_user
+      prompt: "New server connection username"
+      private:  no
+    - name: srv_pass
+      prompt: "New server connection password"
+      private: yes
+    - name: srv_env
+      prompt: "New server environment [prod/test]"
+      private: no
+    - name: timezone
+      prompt: "New server timezone"
+      private: no
+
+  roles: 
+    - enroll-linux-prepare
+    - enroll-linux-core
+    - enroll-linux-ssh
+    - enroll-linux-groups

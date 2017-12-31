@@ -1,0 +1,29 @@
+---
+
+- name: Copy Static Web Container image files
+  copy:
+    src: httpd-container
+    dest: /root/
+
+- name: Create Web Data volume
+  docker_volume:
+    name: "web_data_{{ ansible_host }}"
+
+- name: Create Static Web Container image
+  docker_image:
+    name: httpd-container.image
+    path: /root/httpd-container/
+    pull: no
+    rm: yes
+    dockerfile: /root/httpd-container/Dockerfile
+
+- name: Create Static Web Container
+  docker_container:
+    restart_policy: unless-stopped
+    hostname: "{{ srv_host }}"
+    volumes: "web_data_{{ srv_host }}:/var/www/html"
+    name: httpd.container
+    pull: no
+    image: http-container.image
+  when: "'dynamic-web-servers' not in group_names"
+

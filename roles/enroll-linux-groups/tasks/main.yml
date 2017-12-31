@@ -1,0 +1,31 @@
+---
+
+- name: Search for host in inventory
+  shell: "grep -E '^{{ srv_host }}' inventory/{{ srv_env }}/hosts | cat"
+  register: host_in_inv 
+
+- debug:
+    msg: "Host {{ srv_host }} was already found in the inventory file, will only replace occurences"
+  when: host_in_inv.stdout != ''
+
+- name: "Replace occurences of {{ srv_host }} in inventory if any"
+  replace:
+    path: "inventory/{{ srv_env }}/hosts"
+    regexp: "({{ srv_host }}).*"
+    replace: '\1 ansible_host={{ srv_ip }} ansible_port=6789 ansible_user={{ srv_user }} ansible_password={{ srv_pass }}'
+  when: host_in_inv.stdout != ''
+
+- name: Define host to groups relations
+  pause:
+    prompt: "Does host {{ srv_host }} belong to group {{ item }}[y/N]?"
+  with_items: "{{ groups }}"
+  register: srv_groups
+  when: host_in_inv.stdout == ''
+
+- name: Add the host to the inventory file
+  lineinfile:
+    path: "inventory/{{ srv_env}}/hosts"
+    insertafter: "^\\[{{ item.item }}\\]"
+    line: "{{ srv_host }} ansible_host={{ srv_ip }} ansible_port=6789 ansible_user={{ srv_user }} ansible_pass={{ srv_pass }}"
+  when: (item.user_input is defined) and ((item.user_input == 'y') and (host_in_inv.stdout ==''))
+  with_items: "{{ srv_groups.results }}"

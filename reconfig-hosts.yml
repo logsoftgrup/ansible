@@ -1,0 +1,5 @@
+---
+
+- import_playbook: docker-hosts.yml
+- import_playbook: static-web-servers.yml
+- import_playbook: dynamic-web-servers.yml

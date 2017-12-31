@@ -1,0 +1,18 @@
+ansible-tower ansible_host=ip ansible_port=678 ansible_user=srv_user ansible_password=srv_pass
+
+[httpd-container]
+
+[httpd-container:children]
+php-container
+
+[php-container]
+
+[mysql-container]
+
+[docker:children]
+httpd-container
+mysql-container
+php-container
+
+[supervisor:children]
+docker

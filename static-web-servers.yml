@@ -1,0 +1,7 @@
+---
+
+- name: Configuration pertaining to Static Web servers
+  hosts: static-web-servers
+
+  roles:
+    - web-static

@@ -1,0 +1,25 @@
+---
+
+- name: Copy Dynamic Web Container image files
+  copy:
+    src: php-container
+    dest: /root/
+
+- name: Create Dynamic Web Container Image
+  docker_image:
+    name: php-container.image
+    path: /root/php-container/
+    pull: no
+    rm: yes
+    dockerfile: /root/php-container/Dockerfile 
+
+- name: Create Dynamic Web Container
+  docker_container:
+    restart_policy: unless-stopped
+    hostname: "{{ ansible_host }}"
+    volumes: "web_data_{{ ansible_host }}:/var/www/html"
+    name: php.container
+    pull: no
+    image: php-container.image
+    published_ports: "80:80"
+  when: "'dynamic-web-servers' in group_names"

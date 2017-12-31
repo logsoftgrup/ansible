@@ -1,0 +1,35 @@
+---
+
+- name: Install VMware Tools
+  yum:
+    name: open-vm-tools
+  delegate_to: "{{ srv_host }}"
+  when: (srv_type  == 'vmware')
+
+- name: Install SElinux dependency packages
+  yum:
+    name: libselinux-python,policycoreutils-python
+  delegate_to: "{{ srv_host }}"
+
+#- name: Update all packages
+#  yum:
+#    name: '*'
+#    state: latest
+
+- name: Set the hostname
+  hostname:
+    name: "{{ srv_host }}"
+  delegate_to: "{{ srv_host }}"
+
+- name: Set the timezone
+  timezone:
+    name: "{{ timezone }}"
+  delegate_to: "{{ srv_host }}"
+
+- name: Set the prompt environment variable
+  lineinfile:
+    path: /root/.bashrc
+    regexp: "^PS1="
+    line: 'PS1="\[\e[31m\][\h \w]# \[\e[37m\]"'
+  delegate_to: "{{ srv_host }}"
+
